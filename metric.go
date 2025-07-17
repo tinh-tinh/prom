@@ -10,8 +10,8 @@ type Metric struct {
 	Collector prometheus.Collector
 }
 
-func InjectCounter(module core.RefProvider, name string) prometheus.Counter {
-	metric, ok := module.Ref(GetMetricName(name)).(prometheus.Counter)
+func InjectCounter(ctx core.Ctx, name string) prometheus.Counter {
+	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Counter)
 	if !ok {
 		return nil
 	}
@@ -19,8 +19,8 @@ func InjectCounter(module core.RefProvider, name string) prometheus.Counter {
 	return metric
 }
 
-func InjectCounterVec(module core.RefProvider, name string) *prometheus.CounterVec {
-	metric, ok := module.Ref(GetMetricName(name)).(*prometheus.CounterVec)
+func InjectCounterVec(ctx core.Ctx, name string) *prometheus.CounterVec {
+	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.CounterVec)
 	if !ok {
 		return nil
 	}
@@ -28,8 +28,8 @@ func InjectCounterVec(module core.RefProvider, name string) *prometheus.CounterV
 	return metric
 }
 
-func InjectGauge(module core.RefProvider, name string) prometheus.Gauge {
-	metric, ok := module.Ref(GetMetricName(name)).(prometheus.Gauge)
+func InjectGauge(ctx core.Ctx, name string) prometheus.Gauge {
+	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Gauge)
 	if !ok {
 		return nil
 	}
@@ -37,8 +37,8 @@ func InjectGauge(module core.RefProvider, name string) prometheus.Gauge {
 	return metric
 }
 
-func InjectGaugeVec(module core.RefProvider, name string) *prometheus.GaugeVec {
-	metric, ok := module.Ref(GetMetricName(name)).(*prometheus.GaugeVec)
+func InjectGaugeVec(ctx core.Ctx, name string) *prometheus.GaugeVec {
+	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.GaugeVec)
 	if !ok {
 		return nil
 	}
@@ -46,8 +46,8 @@ func InjectGaugeVec(module core.RefProvider, name string) *prometheus.GaugeVec {
 	return metric
 }
 
-func InjectHistogram(module core.RefProvider, name string) prometheus.Histogram {
-	metric, ok := module.Ref(GetMetricName(name)).(prometheus.Histogram)
+func InjectHistogram(ctx core.Ctx, name string) prometheus.Histogram {
+	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Histogram)
 	if !ok {
 		return nil
 	}
@@ -55,8 +55,8 @@ func InjectHistogram(module core.RefProvider, name string) prometheus.Histogram 
 	return metric
 }
 
-func InjectHistogramVec(module core.RefProvider, name string) *prometheus.HistogramVec {
-	metric, ok := module.Ref(GetMetricName(name)).(*prometheus.HistogramVec)
+func InjectHistogramVec(ctx core.Ctx, name string) *prometheus.HistogramVec {
+	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.HistogramVec)
 	if !ok {
 		return nil
 	}
@@ -64,8 +64,8 @@ func InjectHistogramVec(module core.RefProvider, name string) *prometheus.Histog
 	return metric
 }
 
-func InjectSummary(module core.RefProvider, name string) prometheus.Summary {
-	metric, ok := module.Ref(GetMetricName(name)).(prometheus.Summary)
+func InjectSummary(ctx core.Ctx, name string) prometheus.Summary {
+	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Summary)
 	if !ok {
 		return nil
 	}
@@ -73,8 +73,8 @@ func InjectSummary(module core.RefProvider, name string) prometheus.Summary {
 	return metric
 }
 
-func InjectSummaryVec(module core.RefProvider, name string) *prometheus.SummaryVec {
-	metric, ok := module.Ref(GetMetricName(name)).(*prometheus.SummaryVec)
+func InjectSummaryVec(ctx core.Ctx, name string) *prometheus.SummaryVec {
+	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.SummaryVec)
 	if !ok {
 		return nil
 	}

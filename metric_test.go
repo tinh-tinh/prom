@@ -14,8 +14,8 @@ import (
 )
 
 func Test_Counter(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		counter := prompt.InjectCounter(ref, "http_requests_total")
+	middleware := func(ctx core.Ctx) error {
+		counter := prompt.InjectCounter(ctx, "http_requests_total")
 		if counter != nil {
 			counter.Inc()
 		}
@@ -32,7 +32,7 @@ func Test_Counter(t *testing.T) {
 					}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -59,8 +59,8 @@ func Test_Counter(t *testing.T) {
 }
 
 func Test_CounterVec(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		counter := prompt.InjectCounterVec(ref, "http_requests_total")
+	middleware := func(ctx core.Ctx) error {
+		counter := prompt.InjectCounterVec(ctx, "http_requests_total")
 		if counter != nil {
 			method := ctx.Req().Method
 			path := ctx.Req().URL.Path
@@ -80,7 +80,7 @@ func Test_CounterVec(t *testing.T) {
 					}, []string{"path", "method"}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -107,8 +107,8 @@ func Test_CounterVec(t *testing.T) {
 }
 
 func Test_Gauge(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		gauge := prompt.InjectGauge(ref, "http_active_requests")
+	middleware := func(ctx core.Ctx) error {
+		gauge := prompt.InjectGauge(ctx, "http_active_requests")
 		if gauge != nil {
 			gauge.Inc()
 		}
@@ -131,7 +131,7 @@ func Test_Gauge(t *testing.T) {
 					),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -158,11 +158,11 @@ func Test_Gauge(t *testing.T) {
 }
 
 func Test_GaugeVec(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
+	middleware := func(ctx core.Ctx) error {
 		method := ctx.Req().Method
 		path := ctx.Req().URL.Path
 
-		gauge := prompt.InjectGaugeVec(ref, "http_active_requests")
+		gauge := prompt.InjectGaugeVec(ctx, "http_active_requests")
 		if gauge != nil {
 			gauge.WithLabelValues(method, path).Inc()
 		}
@@ -186,7 +186,7 @@ func Test_GaugeVec(t *testing.T) {
 					),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -213,8 +213,8 @@ func Test_GaugeVec(t *testing.T) {
 }
 
 func Test_Histogram(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		histogram := prompt.InjectHistogram(ref, "http_request_duration_seconds")
+	middleware := func(ctx core.Ctx) error {
+		histogram := prompt.InjectHistogram(ctx, "http_request_duration_seconds")
 		if histogram != nil {
 			now := time.Now()
 
@@ -237,7 +237,7 @@ func Test_Histogram(t *testing.T) {
 					}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -264,8 +264,8 @@ func Test_Histogram(t *testing.T) {
 }
 
 func Test_HistogramVec(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		histogram := prompt.InjectHistogramVec(ref, "http_request_duration_seconds")
+	middleware := func(ctx core.Ctx) error {
+		histogram := prompt.InjectHistogramVec(ctx, "http_request_duration_seconds")
 		if histogram != nil {
 			now := time.Now()
 
@@ -294,7 +294,7 @@ func Test_HistogramVec(t *testing.T) {
 					}, []string{"path", "method"}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -319,9 +319,10 @@ func Test_HistogramVec(t *testing.T) {
 	require.Nil(t, err)
 	require.NotEmpty(t, string(data))
 }
+
 func Test_Summary(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		summary := prompt.InjectSummary(ref, "post_request_duration_seconds")
+	middleware := func(ctx core.Ctx) error {
+		summary := prompt.InjectSummary(ctx, "post_request_duration_seconds")
 		if summary != nil {
 			now := time.Now()
 
@@ -345,7 +346,7 @@ func Test_Summary(t *testing.T) {
 					}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -372,8 +373,8 @@ func Test_Summary(t *testing.T) {
 }
 
 func Test_SummaryVec(t *testing.T) {
-	middleware := func(ref core.RefProvider, ctx core.Ctx) error {
-		summary := prompt.InjectSummaryVec(ref, "post_request_duration_seconds")
+	middleware := func(ctx core.Ctx) error {
+		summary := prompt.InjectSummaryVec(ctx, "post_request_duration_seconds")
 		if summary != nil {
 			now := time.Now()
 
@@ -402,7 +403,7 @@ func Test_SummaryVec(t *testing.T) {
 					}, []string{"method", "path"}),
 				}},
 			})},
-		}).UseRef(middleware)
+		}).Use(middleware)
 
 		return app
 	}
@@ -426,17 +427,4 @@ func Test_SummaryVec(t *testing.T) {
 	data, err := io.ReadAll(res.Body)
 	require.Nil(t, err)
 	require.NotEmpty(t, string(data))
-}
-
-func Test_Failed(t *testing.T) {
-	module := core.NewModule(core.NewModuleOptions{})
-
-	require.Nil(t, prompt.InjectCounter(module, ""))
-	require.Nil(t, prompt.InjectCounterVec(module, ""))
-	require.Nil(t, prompt.InjectGauge(module, ""))
-	require.Nil(t, prompt.InjectGaugeVec(module, ""))
-	require.Nil(t, prompt.InjectHistogram(module, ""))
-	require.Nil(t, prompt.InjectHistogramVec(module, ""))
-	require.Nil(t, prompt.InjectSummary(module, ""))
-	require.Nil(t, prompt.InjectSummaryVec(module, ""))
 }
