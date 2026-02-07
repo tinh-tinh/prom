@@ -1,4 +1,4 @@
-package prompt_test
+package prom_test
 
 import (
 	"io"
@@ -6,14 +6,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tinh-tinh/prompt"
+	"github.com/tinh-tinh/prom"
 	"github.com/tinh-tinh/tinhtinh/v2/core"
 )
 
 func Test_Promp(t *testing.T) {
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{})},
+			Imports: []core.Modules{prom.Register(&prom.Config{})},
 		})
 
 		return app

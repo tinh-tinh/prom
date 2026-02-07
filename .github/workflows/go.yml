@@ -37,4 +37,4 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: tinh-tinh/prompt
+        slug: tinh-tinh/prom

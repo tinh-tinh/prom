@@ -1,4 +1,4 @@
-package prompt
+package prom
 
 import (
 	"errors"

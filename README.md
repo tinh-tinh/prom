@@ -1,8 +1,8 @@
-# Tinh Tinh Prompt 
+# Tinh Tinh Prometheus
 
 <div>
-<img alt="GitHub Release" src="https://img.shields.io/github/v/release/tinh-tinh/prompt">
-<img alt="GitHub License" src="https://img.shields.io/github/license/tinh-tinh/prompt">
+<img alt="GitHub Release" src="https://img.shields.io/github/v/release/tinh-tinh/prom">
+<img alt="GitHub License" src="https://img.shields.io/github/license/tinh-tinh/prom">
 
 </div>
 
@@ -13,5 +13,5 @@ A Prometheus Client to monitor for Tinh Tinh Framework
 ## Install
 
 ```bash
-go get -u github.com/tinh-tinh/prompt
+go get -u github.com/tinh-tinh/prom
 ```

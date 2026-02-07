@@ -1,4 +1,4 @@
-package prompt_test
+package prom_test
 
 import (
 	"io"
@@ -9,13 +9,13 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stretchr/testify/require"
-	"github.com/tinh-tinh/prompt"
+	"github.com/tinh-tinh/prom"
 	"github.com/tinh-tinh/tinhtinh/v2/core"
 )
 
 func Test_Counter(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		counter := prompt.InjectCounter(ctx, "http_requests_total")
+		counter := prom.InjectCounter(ctx, "http_requests_total")
 		if counter != nil {
 			counter.Inc()
 		}
@@ -23,8 +23,8 @@ func Test_Counter(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_requests_total",
 					Collector: prometheus.NewCounter(prometheus.CounterOpts{
 						Name: "http_requests_total",
@@ -60,7 +60,7 @@ func Test_Counter(t *testing.T) {
 
 func Test_CounterVec(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		counter := prompt.InjectCounterVec(ctx, "http_requests_total")
+		counter := prom.InjectCounterVec(ctx, "http_requests_total")
 		if counter != nil {
 			method := ctx.Req().Method
 			path := ctx.Req().URL.Path
@@ -71,8 +71,8 @@ func Test_CounterVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_requests_total",
 					Collector: prometheus.NewCounterVec(prometheus.CounterOpts{
 						Name: "http_requests_total",
@@ -108,7 +108,7 @@ func Test_CounterVec(t *testing.T) {
 
 func Test_Gauge(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		gauge := prompt.InjectGauge(ctx, "http_active_requests")
+		gauge := prom.InjectGauge(ctx, "http_active_requests")
 		if gauge != nil {
 			gauge.Inc()
 		}
@@ -120,8 +120,8 @@ func Test_Gauge(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_active_requests",
 					Collector: prometheus.NewGauge(
 						prometheus.GaugeOpts{
@@ -162,7 +162,7 @@ func Test_GaugeVec(t *testing.T) {
 		method := ctx.Req().Method
 		path := ctx.Req().URL.Path
 
-		gauge := prompt.InjectGaugeVec(ctx, "http_active_requests")
+		gauge := prom.InjectGaugeVec(ctx, "http_active_requests")
 		if gauge != nil {
 			gauge.WithLabelValues(method, path).Inc()
 		}
@@ -174,8 +174,8 @@ func Test_GaugeVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_active_requests",
 					Collector: prometheus.NewGaugeVec(
 						prometheus.GaugeOpts{
@@ -214,7 +214,7 @@ func Test_GaugeVec(t *testing.T) {
 
 func Test_Histogram(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		histogram := prompt.InjectHistogram(ctx, "http_request_duration_seconds")
+		histogram := prom.InjectHistogram(ctx, "http_request_duration_seconds")
 		if histogram != nil {
 			now := time.Now()
 
@@ -227,8 +227,8 @@ func Test_Histogram(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_request_duration_seconds",
 					Collector: prometheus.NewHistogram(prometheus.HistogramOpts{
 						Name:    "http_request_duration_seconds",
@@ -265,7 +265,7 @@ func Test_Histogram(t *testing.T) {
 
 func Test_HistogramVec(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		histogram := prompt.InjectHistogramVec(ctx, "http_request_duration_seconds")
+		histogram := prom.InjectHistogramVec(ctx, "http_request_duration_seconds")
 		if histogram != nil {
 			now := time.Now()
 
@@ -284,8 +284,8 @@ func Test_HistogramVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "http_request_duration_seconds",
 					Collector: prometheus.NewHistogramVec(prometheus.HistogramOpts{
 						Name:    "http_request_duration_seconds",
@@ -322,7 +322,7 @@ func Test_HistogramVec(t *testing.T) {
 
 func Test_Summary(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		summary := prompt.InjectSummary(ctx, "post_request_duration_seconds")
+		summary := prom.InjectSummary(ctx, "post_request_duration_seconds")
 		if summary != nil {
 			now := time.Now()
 
@@ -332,8 +332,8 @@ func Test_Summary(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "post_request_duration_seconds",
 					Collector: prometheus.NewSummary(prometheus.SummaryOpts{
 						Name: "post_request_duration_seconds",
@@ -374,7 +374,7 @@ func Test_Summary(t *testing.T) {
 
 func Test_SummaryVec(t *testing.T) {
 	middleware := func(ctx core.Ctx) error {
-		summary := prompt.InjectSummaryVec(ctx, "post_request_duration_seconds")
+		summary := prom.InjectSummaryVec(ctx, "post_request_duration_seconds")
 		if summary != nil {
 			now := time.Now()
 
@@ -389,8 +389,8 @@ func Test_SummaryVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prompt.Register(&prompt.Config{
-				Metrics: []prompt.Metric{{
+			Imports: []core.Modules{prom.Register(&prom.Config{
+				Metrics: []prom.Metric{{
 					Name: "post_request_duration_seconds",
 					Collector: prometheus.NewSummaryVec(prometheus.SummaryOpts{
 						Name: "post_request_duration_seconds",
