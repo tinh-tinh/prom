@@ -13,7 +13,7 @@ import (
 func Test_Promp(t *testing.T) {
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{})},
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{})},
 		})
 
 		return app

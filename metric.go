@@ -10,8 +10,28 @@ type Metric struct {
 	Collector prometheus.Collector
 }
 
+func getMetricByName(ctx core.Ctx, name string) prometheus.Collector {
+	config, ok := ctx.Ref(PROMPT).(*Config)
+	if !ok || config == nil {
+		return nil
+	}
+
+	for _, metric := range config.Metrics {
+		if metric.Name == name {
+			return metric.Collector
+		}
+	}
+
+	return nil
+}
+
 func InjectCounter(ctx core.Ctx, name string) prometheus.Counter {
-	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Counter)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(prometheus.Counter)
 	if !ok {
 		return nil
 	}
@@ -20,7 +40,12 @@ func InjectCounter(ctx core.Ctx, name string) prometheus.Counter {
 }
 
 func InjectCounterVec(ctx core.Ctx, name string) *prometheus.CounterVec {
-	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.CounterVec)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(*prometheus.CounterVec)
 	if !ok {
 		return nil
 	}
@@ -29,7 +54,12 @@ func InjectCounterVec(ctx core.Ctx, name string) *prometheus.CounterVec {
 }
 
 func InjectGauge(ctx core.Ctx, name string) prometheus.Gauge {
-	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Gauge)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(prometheus.Gauge)
 	if !ok {
 		return nil
 	}
@@ -38,7 +68,12 @@ func InjectGauge(ctx core.Ctx, name string) prometheus.Gauge {
 }
 
 func InjectGaugeVec(ctx core.Ctx, name string) *prometheus.GaugeVec {
-	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.GaugeVec)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(*prometheus.GaugeVec)
 	if !ok {
 		return nil
 	}
@@ -47,7 +82,12 @@ func InjectGaugeVec(ctx core.Ctx, name string) *prometheus.GaugeVec {
 }
 
 func InjectHistogram(ctx core.Ctx, name string) prometheus.Histogram {
-	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Histogram)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(prometheus.Histogram)
 	if !ok {
 		return nil
 	}
@@ -56,7 +96,12 @@ func InjectHistogram(ctx core.Ctx, name string) prometheus.Histogram {
 }
 
 func InjectHistogramVec(ctx core.Ctx, name string) *prometheus.HistogramVec {
-	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.HistogramVec)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(*prometheus.HistogramVec)
 	if !ok {
 		return nil
 	}
@@ -65,7 +110,12 @@ func InjectHistogramVec(ctx core.Ctx, name string) *prometheus.HistogramVec {
 }
 
 func InjectSummary(ctx core.Ctx, name string) prometheus.Summary {
-	metric, ok := ctx.Ref(GetMetricName(name)).(prometheus.Summary)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(prometheus.Summary)
 	if !ok {
 		return nil
 	}
@@ -74,7 +124,12 @@ func InjectSummary(ctx core.Ctx, name string) prometheus.Summary {
 }
 
 func InjectSummaryVec(ctx core.Ctx, name string) *prometheus.SummaryVec {
-	metric, ok := ctx.Ref(GetMetricName(name)).(*prometheus.SummaryVec)
+	collector := getMetricByName(ctx, name)
+	if collector == nil {
+		return nil
+	}
+
+	metric, ok := collector.(*prometheus.SummaryVec)
 	if !ok {
 		return nil
 	}

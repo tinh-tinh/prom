@@ -23,7 +23,7 @@ func Test_Counter(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_requests_total",
 					Collector: prometheus.NewCounter(prometheus.CounterOpts{
@@ -71,7 +71,7 @@ func Test_CounterVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_requests_total",
 					Collector: prometheus.NewCounterVec(prometheus.CounterOpts{
@@ -120,7 +120,7 @@ func Test_Gauge(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_active_requests",
 					Collector: prometheus.NewGauge(
@@ -174,7 +174,7 @@ func Test_GaugeVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_active_requests",
 					Collector: prometheus.NewGaugeVec(
@@ -227,7 +227,7 @@ func Test_Histogram(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_request_duration_seconds",
 					Collector: prometheus.NewHistogram(prometheus.HistogramOpts{
@@ -284,7 +284,7 @@ func Test_HistogramVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "http_request_duration_seconds",
 					Collector: prometheus.NewHistogramVec(prometheus.HistogramOpts{
@@ -332,7 +332,7 @@ func Test_Summary(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "post_request_duration_seconds",
 					Collector: prometheus.NewSummary(prometheus.SummaryOpts{
@@ -389,7 +389,7 @@ func Test_SummaryVec(t *testing.T) {
 	}
 	appModule := func() core.Module {
 		app := core.NewModule(core.NewModuleOptions{
-			Imports: []core.Modules{prom.Register(&prom.Config{
+			Imports: []core.Modules{prom.ForRoot(&prom.Config{
 				Metrics: []prom.Metric{{
 					Name: "post_request_duration_seconds",
 					Collector: prometheus.NewSummaryVec(prometheus.SummaryOpts{

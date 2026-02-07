@@ -16,7 +16,7 @@ type Config struct {
 	Opt     promhttp.HandlerOpts
 }
 
-func promptHandler(module core.Module) core.Controller {
+func promHandler(module core.Module) core.Controller {
 	ctrl := module.NewController("/metrics")
 	pro, ok := module.Ref(PROMPT).(*Config)
 	if !ok || pro == nil {
@@ -44,34 +44,18 @@ func promptHandler(module core.Module) core.Controller {
 	return ctrl
 }
 
-func Register(config *Config) core.Modules {
+func ForRoot(config *Config) core.Modules {
 	return func(module core.Module) core.Module {
-		promptModule := module.New(core.NewModuleOptions{})
+		promModule := module.New(core.NewModuleOptions{})
 
-		promptModule.NewProvider(core.ProviderOptions{
+		promModule.NewProvider(core.ProviderOptions{
 			Name:  PROMPT,
 			Value: config,
 		})
-		promptModule.Export(PROMPT)
+		promModule.Export(PROMPT)
 
-		if len(config.Metrics) > 0 {
-			for _, metric := range config.Metrics {
-				promptModule.NewProvider(core.ProviderOptions{
-					Name:  GetMetricName(metric.Name),
-					Value: metric.Collector,
-				})
-				promptModule.Export(GetMetricName(metric.Name))
-			}
-		}
+		promModule.Controllers(promHandler)
 
-		promptModule.Controllers(promptHandler)
-
-		return promptModule
+		return promModule
 	}
-}
-
-func GetMetricName(name string) core.Provide {
-	modelName := "Metric_" + name
-
-	return core.Provide(modelName)
 }
